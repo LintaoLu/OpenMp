@@ -26,6 +26,7 @@ float last_values[] = { 0.0, 0.0, 0.0 };
 
 void calculate(int num_of_thread, float precision);
 int isSame(float* value, float* last_value, float precision);
+void printValues(int length, int thread, float precision);
 
 int main(int argc, char *argv[]){
   if(argc <= 1){
@@ -34,6 +35,7 @@ int main(int argc, char *argv[]){
   }
   int num_of_thread = atoi(argv[1]);
   float precision = (float)atof(argv[2]);
+  printValues(row, num_of_thread, precision);
   calculate(num_of_thread, precision);
 
   return 0;
@@ -77,9 +79,15 @@ void calculate(int num_of_thread, float precision){
       }
     }
   } while (isSame(values, last_values, precision) != 1);
-
-  for (int i = 0; i < col; i++) printf("%f\t", values[i]);
-  printf("\n");
+  printf("----------------------------------------\n");
+  printf("|  final answer:                       |\n");
+  printf("|  ");
+  for (int i = 0; i < col; i++) printf("%f  ", values[i]);
+  printf("     |\n");
+  printf("----------------------------------------\n");
+  
+  free(task_position);
+  free(task_end);
 }
 
 int isSame(float* value, float* last_value, float precision){
@@ -89,4 +97,25 @@ int isSame(float* value, float* last_value, float precision){
     if (a - b > precision) return -1;
   }
   return 1;
+}
+
+void printValues(int length, int thread, float precision){
+  printf("----------------------------------------\n");
+  printf("|  len = %d, thr = %d, pre = %f    |\n", length, thread, precision);
+  printf("----------------------------------------\n");
+  printf("|  constants:                          |\n");
+  printf("|  ");
+  for(int i = 0; i < length; i++)
+   printf("%f  ", constants[i]);
+  printf("     |\n");
+  printf("----------------------------------------\n");
+  printf("|  coefficient:                        |\n");
+  for(int i = 0; i < length; i++){
+    printf("| ");
+    for(int j = 0; j < col; j++){
+      if(coefficient[i][j] < 0) printf("%f  ", coefficient[i][j]); 
+      else printf(" %f  ", coefficient[i][j]); 
+    }
+    printf("    |\n");
+  }
 }
